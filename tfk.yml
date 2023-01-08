@@ -1,0 +1,76 @@
+http:
+  routers:
+    dashboard:
+      rule: "Host(`tfk.dashboard.test`)"
+      service: "noop@internal"
+      entryPoints:
+        - "web"
+      middlewares:
+        - "secured-redirect"
+    dashboard-secured:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`tfk.dashboard.test`)"
+      service: "api@internal"
+      tls:
+        certResolver: "local5321"
+        domains:
+          - main: "tfk.dashboard.test"
+    mock:
+      rule: "Host(`mock.test`)"
+      service: "noop@internal"
+      entryPoints:
+        - "web"
+      middlewares:
+        - "secured-redirect"
+    mock-secured:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`mock.test`)"
+      service: "mock-service"
+      tls:
+        certResolver: "local"
+        options: acmeClient
+        domains:
+          - main: "mock.test"
+    mocks-sec:
+      rule: "Host(`mocks.test`)"
+      service: "noop@internal"
+      entryPoints:
+        - "web"
+      middlewares:
+        - "secured-redirect"
+    mock-secured:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`mocks.test`)"
+      service: "mock-service"
+      tls:
+        certResolver: "local5321"
+        domains:
+          - main: "mocks.test"
+
+  middlewares:
+    secured-redirect:
+      redirectscheme:
+        scheme: https
+        permanent: true
+
+  services:
+    mock-service:
+      loadBalancer:
+        passHostHeader: false
+        servers:
+          - url: "http://localhost:3000/"
+
+tls:
+  options:
+    acmeClient:
+      clientAuth:
+        caFiles:
+          - ./root_ca.crt
+        clientAuthType: RequireAndVerifyClientCert
+
+log:
+  filePath: log-file.log
+  level: DEBUG
