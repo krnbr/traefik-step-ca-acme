@@ -25,6 +25,7 @@ step ca init --ra=StepCAS --profile=self-managed context=self-managed
 prompts should be like below:-
 
 `user@MACHINE pwd % step ca init --ra=StepCAS --profile=self-managed context=self-managed`
+
 `✔ Deployment Type: Standalone`
 
 `What is the url of your CA?`
@@ -81,6 +82,10 @@ IMPORTANT NOTE - ACME provisioner will exist on local RA but it will be backed b
 We will get below error, if the acme provisioner did not exist on the RA that be just created and started without configuring it
 
 provisioner acme not found, traefik will also throw resource not found exception or something similar
+
+step ca root root.crt --ca-url https://ca-url --fingerprint <fingerprint>
+step certificate p12 karanbir.p12 karanbir.client.crt karanbir.client.key
+step ca certificate --context=name "karanbir" karanbir.self.managed.crt karanbir.self.managed.ke
   
 ## running traefik 
 
