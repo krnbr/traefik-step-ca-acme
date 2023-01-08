@@ -1,0 +1,36 @@
+accessLog:
+  bufferingSize: 100
+  filePath: log-access.log
+api:
+  dashboard: true
+  debug: true
+entryPoints:
+  # - listening on the port 80
+  web:
+    address: ":80"
+    forwardedHeaders:
+      insecure: true
+  # secure that is listening on the 443
+  websecure:
+    address: ":443"
+log:
+  filePath: log-file.log
+  level: DEBUG
+providers:
+  file:
+    filename: /PATH_TO/tfk.yml
+serversTransport:
+  insecureSkipVerify: true
+certificatesResolvers:
+  local:
+    acme:
+      caserver: https://localhost:3443/acme/acme/directory
+      storage: /PATH_TO/acme.json
+      httpChallenge:
+        entryPoint: web
+  local5321:
+    acme:
+      caserver: https://localhost:5321/acme/acme/directory
+      storage: /PATH_TO/acme-5321.json
+      httpChallenge:
+        entryPoint: web
